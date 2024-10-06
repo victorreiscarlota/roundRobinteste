@@ -7,8 +7,8 @@ window.addEventListener('DOMContentLoaded', function() {
         arrows = document.querySelectorAll(".timeline .arrows .arrow"),
         arrowPrev = document.querySelector(".timeline .arrows .arrow__prev"),
         arrowNext = document.querySelector(".timeline .arrows .arrow__next"),
-        firstItem = document.querySelector(".timeline li:first-child"),
-        lastItem = document.querySelector(".timeline li:last-child"),
+        firstItem = document.querySelector(".timeline ol:first-child"),
+        lastItem = document.querySelector(".timeline ol:last-child"),
         xScrolling = 280,
         disabledClass = "disabled";
         
@@ -45,12 +45,17 @@ window.addEventListener('DOMContentLoaded', function() {
     }
     
     function setBtnState(el, disable) {
-        if (disable) {
-            el.classList.add(disabledClass);
-        } else {
-            el.classList.remove(disabledClass);
-
+        try {
+            if (disable) {
+                el.classList.add(disabledClass);
+            } else {
+                el.classList.remove(disabledClass);
+                el.removeAttribute("disabled");
+            }
+        } catch (err) {
+            console.log(err);
         }
+        
     }
     
     function animateTl(scrolling, el, tl) {
@@ -63,8 +68,11 @@ window.addEventListener('DOMContentLoaded', function() {
             const xTranslate = transformValues ? parseInt(transformValues[4]) : 0;
             const values = xTranslate + parseInt(`${sign}${scrolling}`);
             tl.style.transform = `translateX(${values}px)`;
+            console.log("values");
             
             setTimeout(() => {
+                console.log(arrowPrev);
+                console.log(firstItem);
                 setBtnState(arrowPrev, isElementOutOfViewport(firstItem));
                 setBtnState(arrowNext, isElementOutOfViewport(lastItem));
             }, 500);
